@@ -1,0 +1,31 @@
+# Settings to manage and configure a Firebase App Hosting backend.
+# https://firebase.google.com/docs/app-hosting/configure
+
+runConfig:
+  # Minimum instances to keep warm (0 for cost savings, 1+ for faster response)
+  minInstances: 0
+  
+  # Maximum instances for auto-scaling (adjust based on expected traffic)
+  maxInstances: 4
+  
+  # Number of concurrent requests per instance
+  concurrency: 80
+  
+  # CPU allocation (1 = 1 vCPU)
+  cpu: 1
+  
+  # Memory allocation in MiB
+  memoryMiB: 512
+
+# Environment variables (set these in Firebase Console for security)
+# Required variables:
+# - NEXT_PUBLIC_FIREBASE_API_KEY
+# - NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+# - NEXT_PUBLIC_FIREBASE_PROJECT_ID
+# - NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+# - NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+# - NEXT_PUBLIC_FIREBASE_APP_ID
+
+env:
+  - variable: NODE_ENV
+    value: production

@@ -1,0 +1,98 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Modern neutral background with subtle warmth */
+    --background: 220 13% 97%; /* #F8F9FB */
+    --foreground: 215 25% 27%; /* Rich dark blue-gray */
+    --card: 0 0% 100%;
+    --card-foreground: 215 25% 27%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 25% 27%;
+    
+    /* Professional blue with good contrast */
+    --primary: 217 91% 60%; /* #3B82F6 - Modern blue */
+    --primary-foreground: 0 0% 100%;
+    
+    /* Subtle secondary colors */
+    --secondary: 220 13% 95%;
+    --secondary-foreground: 215 25% 27%;
+    --muted: 220 13% 95%;
+    --muted-foreground: 215 16% 47%;
+    
+    /* Success green for positive values */
+    --accent: 142 71% 45%; /* #10B981 - Emerald green */
+    --accent-foreground: 0 0% 100%;
+    
+    /* Error red for negative values */
+    --destructive: 0 84% 60%; /* #EF4444 - Modern red */
+    --destructive-foreground: 0 0% 100%;
+    
+    /* Refined borders and inputs */
+    --border: 220 13% 91%;
+    --input: 220 13% 95%;
+    --ring: 217 91% 60%;
+    
+    /* Enhanced chart colors for better distinction */
+    --chart-1: 142 71% 45%; /* Emerald - Income/Positive */
+    --chart-2: 0 84% 60%; /* Red - Bills/Important */
+    --chart-3: 217 91% 60%; /* Blue - Utilities/Essential */
+    --chart-4: 262 83% 58%; /* Purple - Transport */
+    --chart-5: 32 95% 44%; /* Orange - Food/Dining */
+    
+    --radius: 0.75rem; /* Slightly more rounded corners */
+  }
+
+  .dark {
+    /* Rich dark background with subtle blue tint */
+    --background: 220 19% 9%; /* #0F1419 - Deep dark */
+    --foreground: 220 9% 95%; /* Light gray text */
+    --card: 220 13% 13%; /* #1F2937 - Card background */
+    --card-foreground: 220 9% 95%;
+    --popover: 220 13% 13%;
+    --popover-foreground: 220 9% 95%;
+    
+    /* Bright blue primary for dark mode */
+    --primary: 217 91% 70%; /* #60A5FA - Lighter blue */
+    --primary-foreground: 220 19% 9%;
+    
+    /* Subtle dark surfaces */
+    --secondary: 220 13% 18%;
+    --secondary-foreground: 220 9% 95%;
+    --muted: 220 13% 18%;
+    --muted-foreground: 220 9% 75%;
+    
+    /* Bright emerald green for success */
+    --accent: 142 76% 55%; /* #34D399 - Brighter emerald */
+    --accent-foreground: 220 19% 9%;
+    
+    /* Bright red for errors */
+    --destructive: 0 72% 51%; /* #DC2626 - Accessible red */
+    --destructive-foreground: 0 0% 100%;
+    
+    /* Subtle borders and inputs */
+    --border: 220 13% 21%;
+    --input: 220 13% 16%;
+    --ring: 217 91% 70%;
+    
+    /* Enhanced dark mode chart colors */
+    --chart-1: 142 76% 55%; /* Bright emerald */
+    --chart-2: 0 84% 60%; /* Bright red */
+    --chart-3: 217 91% 70%; /* Bright blue */
+    --chart-4: 262 83% 70%; /* Bright purple */
+    --chart-5: 32 95% 55%; /* Bright orange */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
