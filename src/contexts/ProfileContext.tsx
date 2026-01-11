@@ -50,7 +50,8 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
         let profileList: Profile[] = [];
 
         if (profileSnap.exists()) {
-          activeProfile = profileSnap.data() as Profile;
+          // IMPORTANT: Firestore data doesn't include the ID automatically. We must merge it.
+          activeProfile = { ...profileSnap.data(), id: profileSnap.id } as Profile;
           profileList.push(activeProfile);
 
           // If partner exists, fetch partner's profile too
@@ -58,7 +59,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
             const partnerRef = doc(db, PROFILES_COLLECTION, activeProfile.partnerUid);
             const partnerSnap = await getDoc(partnerRef);
             if (partnerSnap.exists()) {
-              profileList.push(partnerSnap.data() as Profile);
+              profileList.push({ ...partnerSnap.data(), id: partnerSnap.id } as Profile);
             }
           }
         } else {
@@ -117,14 +118,14 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       const profileSnap = await getDoc(profileRef);
 
       if (profileSnap.exists()) {
-        const upToDateProfile = profileSnap.data() as Profile;
+        const upToDateProfile = { ...profileSnap.data(), id: profileSnap.id } as Profile;
         const profileList: Profile[] = [upToDateProfile];
 
         if (upToDateProfile.partnerUid) {
           const partnerRef = doc(db, PROFILES_COLLECTION, upToDateProfile.partnerUid);
           const partnerSnap = await getDoc(partnerRef);
           if (partnerSnap.exists()) {
-            profileList.push(partnerSnap.data() as Profile);
+            profileList.push({ ...partnerSnap.data(), id: partnerSnap.id } as Profile);
           }
         }
 
