@@ -30,16 +30,10 @@ import RecurringExpenseManager from '@/components/RecurringExpenseManager';
 
 
 const calculateRecurringIncomesForMonth = (profileId: string, year: number, month: number): number => {
-  let totalRecurring = 0;
-  const profileRecurringEntries = RECURRING_INCOMES_CONFIG.filter(entry => entry.profileId === profileId);
-
-  profileRecurringEntries.forEach(entry => {
-    const frequencyConfig = INCOME_FREQUENCIES_CONFIG.find(f => f.id === entry.frequencyId);
-    if (frequencyConfig) {
-      totalRecurring += entry.amount * frequencyConfig.occurrencesPerMonth;
-    }
-  });
-  return totalRecurring;
+  // LEGACY LOGIC: We used to calculate recurring income from static config.
+  // Now we generate real records (via recurring-income.ts) which are fetched in 'manuallyLoggedIncomes'.
+  // Returning 0 here prevents double counting.
+  return 0;
 };
 
 

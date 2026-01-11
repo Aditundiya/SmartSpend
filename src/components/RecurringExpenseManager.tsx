@@ -199,8 +199,8 @@ export default function RecurringExpenseManager({ profileId, onRecurringExpenseC
                     const monthlyAmount = getMonthlyEquivalent(template.amount, template.frequency);
 
                     return (
-                        <div key={template.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-accent/5 transition-colors">
-                            <div className="flex-1">
+                        <div key={template.id} className="flex flex-col md:flex-row md:items-center justify-between p-4 border rounded-lg hover:bg-accent/5 transition-colors gap-4">
+                            <div className="flex-1 w-full">
                                 <div className="flex items-center gap-2 mb-2">
                                     <CategoryIcon className="h-4 w-4 text-muted-foreground" />
                                     <h4 className="font-medium">{template.description}</h4>
@@ -208,7 +208,7 @@ export default function RecurringExpenseManager({ profileId, onRecurringExpenseC
                                         {template.frequency}
                                     </Badge>
                                 </div>
-                                <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                                <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
                                     <div className="flex items-center gap-1">
                                         <DollarSign className="h-4 w-4" />
                                         <span className="font-medium">{formatCurrency(template.amount)}</span>
@@ -220,13 +220,13 @@ export default function RecurringExpenseManager({ profileId, onRecurringExpenseC
                                         <Tag className="h-4 w-4" />
                                         {getCategoryName(template.categoryId)}
                                     </div>
-                                    <div className="flex items-center gap-1">
+                                    <div className="flex items-center gap-1 whitespace-nowrap">
                                         <Calendar className="h-4 w-4" />
                                         Started {format(template.startDate, 'MMM d, yyyy')}
                                     </div>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2 w-full md:w-auto mt-2 md:mt-0 justify-end">
                                 <Button
                                     variant="outline"
                                     size="sm"
