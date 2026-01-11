@@ -60,6 +60,7 @@ function DashboardContent() {
   const isReadOnlyMode = useMemo(() => {
     if (!user || !currentProfile) return true;
     const isOwner = currentProfile.id === user.uid;
+    // Check if the current profile lists the logged-in user as their partner
     const isPartnerOfThisProfile = currentProfile.partnerUid === user.uid;
     return !isOwner && !isPartnerOfThisProfile;
   }, [user, currentProfile]);
