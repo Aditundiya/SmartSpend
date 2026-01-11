@@ -64,6 +64,3 @@ If you are setting up this project locally:
    npm run dev
    ```
    Open [http://localhost:9002](http://localhost:9002).
-
-## 📄 License
-MIT License. See [LICENSE](LICENSE) for details.
