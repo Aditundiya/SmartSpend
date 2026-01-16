@@ -30,7 +30,7 @@ export default function AppHeader() {
 
         {isLoggedIn && (
           <div className="flex items-center gap-4">
-            <nav className="flex items-center gap-1 md:gap-2">
+            <nav className="hidden lg:flex items-center gap-1 md:gap-2">
               {currentProfile && !profileLoading && (
                 <>
                   <Button variant="ghost" asChild>
@@ -74,39 +74,41 @@ export default function AppHeader() {
             </nav>
 
             {profiles.length > 1 && (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="w-40 md:w-48 justify-start">
-                    {profileLoading || authLoading ? (
-                      <Users className="mr-2 h-5 w-5" />
-                    ) : currentProfile ? (
-                      <User className="mr-2 h-5 w-5" />
-                    ) : (
-                      <Users className="mr-2 h-5 w-5" />
-                    )}
-                    {profileLoading || authLoading ? "Loading..." : currentProfile ? currentProfile.name : "Select Profile"}
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-48">
-                  <DropdownMenuLabel>Switch Profile</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuRadioGroup
-                    value={currentProfile?.id || ""}
-                    onValueChange={(value) => {
-                      if (value) setCurrentProfileById(value);
-                    }}
-                  >
-                    {profiles.map((profile) => (
-                      <DropdownMenuRadioItem key={profile.id} value={profile.id}>
-                        {profile.name}
-                      </DropdownMenuRadioItem>
-                    ))}
-                  </DropdownMenuRadioGroup>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <div className="hidden lg:block">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" className="w-40 md:w-48 justify-start">
+                      {profileLoading || authLoading ? (
+                        <Users className="mr-2 h-5 w-5" />
+                      ) : currentProfile ? (
+                        <User className="mr-2 h-5 w-5" />
+                      ) : (
+                        <Users className="mr-2 h-5 w-5" />
+                      )}
+                      {profileLoading || authLoading ? "Loading..." : currentProfile ? currentProfile.name : "Select Profile"}
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-48">
+                    <DropdownMenuLabel>Switch Profile</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuRadioGroup
+                      value={currentProfile?.id || ""}
+                      onValueChange={(value) => {
+                        if (value) setCurrentProfileById(value);
+                      }}
+                    >
+                      {profiles.map((profile) => (
+                        <DropdownMenuRadioItem key={profile.id} value={profile.id}>
+                          {profile.name}
+                        </DropdownMenuRadioItem>
+                      ))}
+                    </DropdownMenuRadioGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             )}
 
-            <Button variant="ghost" size="sm" onClick={logout}>
+            <Button variant="ghost" size="sm" onClick={logout} className="hidden lg:flex">
               <LogOut className="mr-2 h-4 w-4" />
               Logout
             </Button>

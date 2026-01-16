@@ -225,58 +225,60 @@ function IncomesContent() {
               {isLoading && <p className="text-center py-10">Loading incomes for {currentProfile.name}...</p>}
 
               {!isLoading && manualIncomes.length > 0 ? (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Date</TableHead>
-                      <TableHead>Description</TableHead>
-                      <TableHead>Frequency</TableHead>
-                      <TableHead className="text-right">Amount</TableHead>
-                      <TableHead className="text-center">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {manualIncomes.map((income) => (
-                      <TableRow key={income.id}>
-                        <TableCell>{format(income.date, 'MMM dd, yyyy')}</TableCell>
-                        <TableCell className="font-medium">{income.description}</TableCell>
-                        <TableCell>
-                          <Badge variant="secondary">{getFrequencyName(income.frequency)}</Badge>
-                        </TableCell>
-                        <TableCell className="text-right">{formatCurrency(income.amount)}</TableCell>
-                        <TableCell className="text-center space-x-1">
-                          <Button variant="ghost" size="icon" className="text-blue-600 hover:text-blue-700" onClick={() => handleOpenEditDialog(income)} disabled={isLoading || isReadOnlyMode}>
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                              <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive/90" disabled={isLoading || isReadOnlyMode}>
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                              <AlertDialogHeader>
-                                <AlertDialogTitle>Delete Income Entry?</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                  Are you sure you want to delete the income: "{income.description}"? This action cannot be undone.
-                                </AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction
-                                  onClick={() => handleDeleteIncome(income.id)}
-                                  className="bg-destructive hover:bg-destructive/90 text-destructive-foreground"
-                                >
-                                  Delete
-                                </AlertDialogAction>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
-                        </TableCell>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Date</TableHead>
+                        <TableHead>Description</TableHead>
+                        <TableHead>Frequency</TableHead>
+                        <TableHead className="text-right">Amount</TableHead>
+                        <TableHead className="text-center">Actions</TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody>
+                      {manualIncomes.map((income) => (
+                        <TableRow key={income.id}>
+                          <TableCell className="whitespace-nowrap">{format(income.date, 'MMM dd, yyyy')}</TableCell>
+                          <TableCell className="font-medium min-w-[150px]">{income.description}</TableCell>
+                          <TableCell>
+                            <Badge variant="secondary">{getFrequencyName(income.frequency)}</Badge>
+                          </TableCell>
+                          <TableCell className="text-right">{formatCurrency(income.amount)}</TableCell>
+                          <TableCell className="text-center space-x-1 whitespace-nowrap">
+                            <Button variant="ghost" size="icon" className="text-blue-600 hover:text-blue-700" onClick={() => handleOpenEditDialog(income)} disabled={isLoading || isReadOnlyMode}>
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive/90" disabled={isLoading || isReadOnlyMode}>
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>Delete Income Entry?</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    Are you sure you want to delete the income: "{income.description}"? This action cannot be undone.
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                  <AlertDialogAction
+                                    onClick={() => handleDeleteIncome(income.id)}
+                                    className="bg-destructive hover:bg-destructive/90 text-destructive-foreground"
+                                  >
+                                    Delete
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
               ) : (
                 !isLoading && <p className="text-muted-foreground text-center py-10">No manually logged incomes recorded for {currentProfile.name} in {format(viewingDate, 'MMMM yyyy')}.</p>
               )}

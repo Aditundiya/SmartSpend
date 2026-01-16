@@ -237,28 +237,30 @@ function OverviewContent() {
                   </CardHeader>
                   <CardContent>
                     {profileFinancialSummaries.length > 0 ? (
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Profile</TableHead>
-                            <TableHead className="text-right">Total Income</TableHead>
-                            <TableHead className="text-right">Total Expenses</TableHead>
-                            <TableHead className="text-right">Net Balance</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {profileFinancialSummaries.map((summary) => (
-                            <TableRow key={summary.profileId}>
-                              <TableCell className="font-medium">{summary.name}</TableCell>
-                              <TableCell className="text-right text-accent">{formatCurrency(summary.totalIncome)}</TableCell>
-                              <TableCell className="text-right text-destructive">{formatCurrency(summary.totalExpenses)}</TableCell>
-                              <TableCell className={`text-right font-semibold ${summary.netBalance >= 0 ? 'text-accent' : 'text-destructive'}`}>
-                                {formatCurrency(summary.netBalance)}
-                              </TableCell>
+                      <div className="overflow-x-auto">
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Profile</TableHead>
+                              <TableHead className="text-right">Total Income</TableHead>
+                              <TableHead className="text-right">Total Expenses</TableHead>
+                              <TableHead className="text-right">Net Balance</TableHead>
                             </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
+                          </TableHeader>
+                          <TableBody>
+                            {profileFinancialSummaries.map((summary) => (
+                              <TableRow key={summary.profileId}>
+                                <TableCell className="font-medium whitespace-nowrap">{summary.name}</TableCell>
+                                <TableCell className="text-right text-accent whitespace-nowrap">{formatCurrency(summary.totalIncome)}</TableCell>
+                                <TableCell className="text-right text-destructive whitespace-nowrap">{formatCurrency(summary.totalExpenses)}</TableCell>
+                                <TableCell className={`text-right font-semibold whitespace-nowrap ${summary.netBalance >= 0 ? 'text-accent' : 'text-destructive'}`}>
+                                  {formatCurrency(summary.netBalance)}
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </div>
                     ) : (
                       !isLoadingData && <p className="text-muted-foreground text-center py-5">No individual profile data to display for this period.</p>
                     )}
