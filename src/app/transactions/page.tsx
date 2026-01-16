@@ -242,11 +242,11 @@ function TransactionsContent() {
       <MobileNavigation />
       <ScrollArea className="flex-grow pb-20 lg:pb-0">
         <main className="container mx-auto px-4 py-8">
-          <div className="flex items-center justify-center gap-4 mb-8">
+          <div className="flex items-center justify-center gap-2 sm:gap-4 mb-8">
             <Button variant="outline" size="icon" onClick={handlePreviousMonth} disabled={isLoading}>
               <ChevronLeft className="h-4 w-4" />
             </Button>
-            <h2 className="text-2xl font-bold text-center w-52 font-headline">
+            <h2 className="text-xl sm:text-2xl font-bold text-center min-w-[140px] sm:w-52 font-headline">
               {format(viewingDate, 'MMMM yyyy')}
             </h2>
             <Button variant="outline" size="icon" onClick={handleNextMonth} disabled={isLoading}>
@@ -277,18 +277,22 @@ function TransactionsContent() {
 
           <Card className="shadow-lg">
             <CardHeader>
-              <div className="flex justify-between items-start">
-                <div>
-                  <CardTitle className="font-headline">
-                    Transactions for {currentProfile.name} - {format(viewingDate, 'MMMM yyyy')}
+              <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
+                <div className="space-y-1">
+                  <CardTitle className="font-headline text-xl sm:text-2xl">
+                    Transactions for {currentProfile.name}
                   </CardTitle>
-                  <CardDescription>View and manage recorded expenses for this month.</CardDescription>
+                  <CardDescription>
+                    {format(viewingDate, 'MMMM yyyy')} - View and manage recorded expenses.
+                  </CardDescription>
                 </div>
-                <ExportButton
-                  expenses={expenses}
-                  filename={`SmartSpend_${currentProfile.name}_Transactions_${format(viewingDate, 'MMMM_yyyy')}.csv`}
-                  categoryMap={categoryMap}
-                />
+                <div className="w-full sm:w-auto flex justify-end">
+                  <ExportButton
+                    expenses={expenses}
+                    filename={`SmartSpend_${currentProfile.name}_Transactions_${format(viewingDate, 'MMMM_yyyy')}.csv`}
+                    categoryMap={categoryMap}
+                  />
+                </div>
               </div>
             </CardHeader>
             <CardContent>
