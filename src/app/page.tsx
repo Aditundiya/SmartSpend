@@ -375,7 +375,7 @@ function DashboardContent() {
           )}
 
           <div className="space-y-4">
-            {isLoadingData && <p className="text-center py-10">Loading financial data for {currentProfile.name}...</p>}
+            {isLoadingData && <p className="text-center py-10">Loading financial data{currentProfile?.name ? ` for ${currentProfile.name}` : ''}...</p>}
 
             {!isLoadingData && (
               <>

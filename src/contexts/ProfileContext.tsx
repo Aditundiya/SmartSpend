@@ -79,9 +79,10 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       } catch (error) {
         console.error("Error loading profile:", error);
         if (user) {
-          const fallbackProfile = {
+          const fallbackProfile: Profile = {
             id: user.uid,
-            name: user.displayName || 'User',
+            name: user.displayName || user.email?.split('@')[0] || 'User',
+            hasCompletedOnboarding: false,
           };
           setCurrentProfile(fallbackProfile);
           setProfiles([fallbackProfile]);
