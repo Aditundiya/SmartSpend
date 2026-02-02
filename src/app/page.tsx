@@ -7,6 +7,7 @@ import type { IncomeFormValues } from '@/lib/validations';
 import AppHeader from '@/components/AppHeader';
 import MobileNavigation from '@/components/MobileNavigation';
 import QuickExpenseEntry from '@/components/QuickExpenseEntry';
+import AddExpenseDialog from '@/components/AddExpenseDialog';
 import SummaryCards from '@/components/SummaryCards';
 import SpendingChart from '@/components/SpendingChart';
 import ExpenseForm from '@/components/ExpenseForm';
@@ -389,13 +390,33 @@ function DashboardContent() {
 
                     {/* TAB A: DAILY (Action focused) */}
                     <TabsContent value="daily" className="space-y-6">
-                      {/* 1. Quick Add (Mobile Only - Prominent) */}
+                      {/* 1. Add Expense Button (Full Dialog) */}
+                      {!isReadOnlyMode && (
+                        <div className="lg:hidden">
+                          <AddExpenseDialog
+                            categories={CATEGORIES}
+                            profiles={[currentProfile]}
+                            onExpenseAdded={handleAddExpense}
+                            currentProfileId={currentProfile.id}
+                            defaultDate={currentDate}
+                          />
+                        </div>
+                      )}
+
+                      {/* 2. Quick Add (Optional - for faster entry) */}
                       {!isReadOnlyMode && (
                         <div className="lg:hidden" id="quick-add">
-                          <QuickExpenseEntry
-                            profileId={currentProfile.id}
-                            onExpenseAdded={handleAddExpense}
-                          />
+                          <Card className="shadow-sm">
+                            <CardHeader>
+                              <CardTitle className="text-sm text-muted-foreground">Quick Add</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                              <QuickExpenseEntry
+                                profileId={currentProfile.id}
+                                onExpenseAdded={handleAddExpense}
+                              />
+                            </CardContent>
+                          </Card>
                         </div>
                       )}
 
