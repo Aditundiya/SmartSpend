@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  serverExternalPackages: ['express', 'genkit', '@genkit-ai/core', '@genkit-ai/googleai', '@genkit-ai/firebase'],
   images: {
     remotePatterns: [
       {

@@ -7,17 +7,26 @@ interface SummaryCardsProps {
   expenses: Expense[];
   totalManualIncomes: number; // Sum of manually logged incomes
   calculatedRecurringIncome: number; // Calculated recurring income
+  previousPeriodSpending?: number; // Spending from the previous month for trend analysis
 }
 
 import { useCurrency } from '@/hooks/use-currency';
 
 // ...
 
-export default function SummaryCards({ expenses, totalManualIncomes, calculatedRecurringIncome }: SummaryCardsProps) {
+export default function SummaryCards({ expenses, totalManualIncomes, calculatedRecurringIncome, previousPeriodSpending }: SummaryCardsProps) {
   const { format: formatCurrency } = useCurrency();
   const totalSpending = expenses.reduce((sum, expense) => sum + expense.amount, 0);
   const totalIncomeThisMonth = totalManualIncomes + calculatedRecurringIncome;
   const netBalance = totalIncomeThisMonth - totalSpending;
+
+  // Calculate trend
+  let trendPercentage = 0;
+  let isSpendingLess = false;
+  if (previousPeriodSpending && previousPeriodSpending > 0) {
+    trendPercentage = ((totalSpending - previousPeriodSpending) / previousPeriodSpending) * 100;
+    isSpendingLess = trendPercentage < 0;
+  }
 
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -32,7 +41,26 @@ export default function SummaryCards({ expenses, totalManualIncomes, calculatedR
         </CardHeader>
         <CardContent className="relative">
           <div className="text-3xl font-bold text-gray-900 mb-1">{formatCurrency(totalSpending)}</div>
-          <p className="text-sm text-muted-foreground">Total amount spent this period</p>
+
+          {previousPeriodSpending !== undefined && previousPeriodSpending > 0 ? (
+            <div className="flex items-center gap-1 text-sm mt-1 mb-2">
+              {isSpendingLess ? (
+                <span className="text-green-600 font-medium flex items-center">
+                  <TrendingDown className="h-3 w-3 mr-1" />
+                  {Math.abs(trendPercentage).toFixed(0)}% less
+                </span>
+              ) : (
+                <span className="text-red-500 font-medium flex items-center">
+                  <TrendingUp className="h-3 w-3 mr-1" />
+                  {Math.abs(trendPercentage).toFixed(0)}% more
+                </span>
+              )}
+              <span className="text-muted-foreground">than last month</span>
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground mb-3">Total amount spent this period</p>
+          )}
+
           {totalSpending > 0 && (
             <div className="mt-3 h-2 bg-red-100 rounded-full overflow-hidden">
               <div className="h-full bg-red-400 rounded-full animate-pulse" style={{ width: '100%' }} />

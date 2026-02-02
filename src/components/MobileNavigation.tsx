@@ -179,7 +179,7 @@ export default function MobileNavigation() {
       {/* Bottom Navigation for Mobile */}
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-border z-40" aria-label="Main navigation">
         <div className="flex items-center justify-around py-2">
-          {navItems.slice(0, 4).map((item) => {
+          {navItems.slice(0, 2).map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;
             const isDisabled = item.requiresProfile && (!currentProfile || profileLoading);
@@ -191,14 +191,49 @@ export default function MobileNavigation() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex flex-col items-center gap-1 px-3 py-2 rounded-lg transition-colors min-w-0",
+                  "flex flex-col items-center gap-1 px-3 py-2 rounded-lg transition-colors min-w-0 flex-1",
                   isActive
                     ? "text-primary"
                     : "text-muted-foreground hover:text-foreground"
                 )}
               >
                 <Icon className="h-5 w-5" />
-                <span className="text-xs font-medium truncate">{item.label}</span>
+                <span className="text-[10px] font-medium truncate">{item.label}</span>
+              </Link>
+            );
+          })}
+
+          {/* Central Prominent Add Button */}
+          {currentProfile && !profileLoading && (
+            <div className="-mt-6 mx-2 relative z-50">
+              <Link href="/#quick-add">
+                <div className="bg-primary text-primary-foreground h-14 w-14 rounded-full flex items-center justify-center shadow-lg hover:bg-primary/90 transition-all active:scale-95 ring-4 ring-card">
+                  <Plus className="h-8 w-8" />
+                </div>
+              </Link>
+            </div>
+          )}
+
+          {navItems.slice(2, 4).map((item) => {
+            const Icon = item.icon;
+            const isActive = pathname === item.href;
+            const isDisabled = item.requiresProfile && (!currentProfile || profileLoading);
+
+            if (isDisabled) return <div key={item.href} className="w-12" />; // Placeholder
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "flex flex-col items-center gap-1 px-3 py-2 rounded-lg transition-colors min-w-0 flex-1",
+                  isActive
+                    ? "text-primary"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                <Icon className="h-5 w-5" />
+                <span className="text-[10px] font-medium truncate">{item.label}</span>
               </Link>
             );
           })}

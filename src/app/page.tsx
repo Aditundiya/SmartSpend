@@ -26,6 +26,7 @@ import { useCurrency } from '@/hooks/use-currency';
 import AiInsights from '@/components/AiInsights';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import RecurringExpenseManager from '@/components/RecurringExpenseManager';
+import OnboardingWizard from '@/components/OnboardingWizard';
 
 
 
@@ -42,9 +43,11 @@ function DashboardContent() {
   const { user } = useAuth();
   const { format: formatCurrency } = useCurrency();
   const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [previousExpenses, setPreviousExpenses] = useState<Expense[]>([]); // For trend calculation
   const [manuallyLoggedincomes, setManuallyLoggedincomes] = useState<Income[]>([]);
   const [calculatedRecurringIncome, setCalculatedRecurringIncome] = useState(0);
   const [isLoadingData, setIsLoadingData] = useState(true);
+  const [showOnboarding, setShowOnboarding] = useState(false); // Onboarding state
   const [viewingDate, setViewingDate] = useState(new Date());
   const [currentYear, setCurrentYear] = useState<number | null>(null);
   const { toast } = useToast();
@@ -99,15 +102,31 @@ function DashboardContent() {
           console.error('Error generating recurring expenses:', recurringError);
         }
 
-        const [fetchedExpenses, fetchedManualIncomes] = await Promise.all([
+        const [fetchedExpenses, fetchedManualIncomes, fetchedPreviousExpenses] = await Promise.all([
           getExpenses(currentProfile.id, year, month),
-          getIncomes(currentProfile.id, year, month)
+          getIncomes(currentProfile.id, year, month),
+          getExpenses(currentProfile.id, year === 0 && month === 0 ? year - 1 : year, month === 0 ? 11 : month - 1), // Simple prev month logic
         ]);
 
+        const recurring = calculateRecurringIncomesForMonth(currentProfile.id, year, month);
+
         setExpenses(fetchedExpenses);
+        setPreviousExpenses(fetchedPreviousExpenses);
         setManuallyLoggedincomes(fetchedManualIncomes);
 
-        const recurring = calculateRecurringIncomesForMonth(currentProfile.id, year, month);
+        // Check for onboarding: if no expenses, no incomes, and no recurring templates (implied by low data), show wizard
+        if (fetchedExpenses.length === 0 && fetchedManualIncomes.length === 0 && recurring === 0 && !isReadOnlyMode) {
+          const { getRecurringIncomeTemplates } = await import('@/lib/recurring-income');
+          const { getRecurringExpenseTemplates } = await import('@/lib/recurring-expense');
+
+          // Check if any templates exist for this profile
+          const hasRecurringIncomes = getRecurringIncomeTemplates().some(t => t.profileId === currentProfile.id);
+          const hasRecurringExpenses = getRecurringExpenseTemplates().some(t => t.profileId === currentProfile.id);
+
+          if (!hasRecurringIncomes && !hasRecurringExpenses) {
+            setShowOnboarding(true);
+          }
+        }
         setCalculatedRecurringIncome(recurring);
 
       } catch (error) {
@@ -118,6 +137,7 @@ function DashboardContent() {
           description: "Could not fetch financial data. Please try again or check console.",
         });
         setExpenses([]);
+        setPreviousExpenses([]);
         setManuallyLoggedincomes([]);
         setCalculatedRecurringIncome(0);
       } finally {
