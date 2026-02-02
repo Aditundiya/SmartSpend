@@ -2,6 +2,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { PiggyBank, LayoutDashboard, ListChecks, Settings, Users, User, DollarSign, Eye, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useProfile } from '@/contexts/ProfileContext';
@@ -24,7 +25,9 @@ export default function AppHeader() {
     <header className="hidden lg:block bg-card border-b border-border shadow-sm sticky top-0 z-50">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 text-foreground hover:text-primary transition-colors">
-          <PiggyBank className="h-8 w-8 text-primary" />
+          <div className="relative h-8 w-8">
+            <Image src="/logo.png" alt="Spentra Logo" fill className="object-contain" priority />
+          </div>
           <h1 className="text-2xl font-bold font-headline">Spentra</h1>
         </Link>
 

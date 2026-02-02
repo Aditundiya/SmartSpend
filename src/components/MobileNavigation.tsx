@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import NextImage from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
@@ -81,7 +82,9 @@ export default function MobileNavigation() {
       <header className="lg:hidden bg-card border-b border-border sticky top-0 z-40">
         <div className="flex items-center justify-between px-4 py-3">
           <Link href="/" className="flex items-center gap-2">
-            <PiggyBank className="h-6 w-6 text-primary" />
+            <div className="relative h-6 w-6">
+              <NextImage src="/logo.png" alt="Spentra Logo" fill className="object-contain" />
+            </div>
             <span className="font-bold text-lg">Spentra</span>
           </Link>
 
@@ -101,7 +104,9 @@ export default function MobileNavigation() {
                 <div className="flex flex-col h-full">
                   {/* Header */}
                   <div className="flex items-center gap-2 pb-4 border-b">
-                    <PiggyBank className="h-6 w-6 text-primary" />
+                    <div className="relative h-6 w-6">
+                      <NextImage src="/logo.png" alt="Spentra Logo" fill className="object-contain" />
+                    </div>
                     <span className="font-bold text-lg">Spentra</span>
                   </div>
 

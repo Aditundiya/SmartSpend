@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '@/contexts/AuthContext';
@@ -63,8 +64,8 @@ export default function LoginPage() {
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader className="space-y-1 text-center">
           <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
-              <PiggyBank className="h-8 w-8 text-primary" />
+            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center relative overflow-hidden p-3">
+              <Image src="/logo.png" alt="Spentra Logo" width={48} height={48} className="object-contain" />
             </div>
           </div>
           <CardTitle className="text-2xl font-bold">Welcome back</CardTitle>
