@@ -398,7 +398,7 @@ function DashboardContent() {
                             profiles={[currentProfile]}
                             onExpenseAdded={handleAddExpense}
                             currentProfileId={currentProfile.id}
-                            defaultDate={currentDate}
+                            defaultDate={viewingDate}
                           />
                         </div>
                       )}
