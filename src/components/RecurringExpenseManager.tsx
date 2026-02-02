@@ -166,12 +166,20 @@ export default function RecurringExpenseManager({ profileId, onRecurringExpenseC
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <p className="text-muted-foreground">
-                        No recurring expenses set up. Add a weekly, fortnightly, or monthly expense to see it here.
-                    </p>
-                    <p className="text-sm text-muted-foreground mt-2">
-                        💡 Tip: Use the expense form above and select a frequency (weekly, fortnightly, or monthly) to create recurring expenses.
-                    </p>
+                    <div className="flex flex-col items-center justify-center text-center py-6 space-y-4">
+                        <div className="bg-muted p-3 rounded-full">
+                            <RefreshCw className="h-8 w-8 text-muted-foreground" />
+                        </div>
+                        <div className="space-y-2">
+                            <h3 className="font-semibold text-lg">No Recurring Expenses Found</h3>
+                            <p className="text-muted-foreground max-w-sm mx-auto">
+                                SmartSpend uses on-device storage for recurring templates. If you switched devices, you may need to set them up again.
+                            </p>
+                        </div>
+                        <div className="bg-blue-50 dark:bg-blue-900/20 text-blue-800 dark:text-blue-200 p-4 rounded-lg text-sm max-w-sm mx-auto">
+                            <p><strong>💡 Tip:</strong> Create a new expense above and select "Weekly" or "Monthly" to restore your recurring schedule.</p>
+                        </div>
+                    </div>
                 </CardContent>
             </Card>
         );

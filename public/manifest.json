@@ -1,13 +1,17 @@
 {
-  "name": "SmartSpend - Expense Tracker",
-  "short_name": "SmartSpend",
+  "name": "Spentra - Track. Split. Settle",
+  "short_name": "Spentra",
   "description": "Track your expenses and income with AI-powered insights",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#3b82f6",
   "orientation": "portrait-primary",
-  "categories": ["finance", "productivity", "utilities"],
+  "categories": [
+    "finance",
+    "productivity",
+    "utilities"
+  ],
   "lang": "en",
   "dir": "ltr",
   "icons": [

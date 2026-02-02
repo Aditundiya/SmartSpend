@@ -21,11 +21,11 @@ export default function AppHeader() {
   const { isLoggedIn, logout, isLoading: authLoading } = useAuth();
 
   return (
-    <header className="bg-card border-b border-border shadow-sm sticky top-0 z-50">
+    <header className="hidden lg:block bg-card border-b border-border shadow-sm sticky top-0 z-50">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 text-foreground hover:text-primary transition-colors">
           <PiggyBank className="h-8 w-8 text-primary" />
-          <h1 className="text-2xl font-bold font-headline">SmartSpend</h1>
+          <h1 className="text-2xl font-bold font-headline">Spentra</h1>
         </Link>
 
         {isLoggedIn && (

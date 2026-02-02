@@ -69,7 +69,7 @@ export default function LoginPage() {
           </div>
           <CardTitle className="text-2xl font-bold">Welcome back</CardTitle>
           <CardDescription>
-            Sign in to your SmartSpend account to manage your finances
+            Sign in to your Spentra account to manage your finances
           </CardDescription>
         </CardHeader>
         <CardContent>

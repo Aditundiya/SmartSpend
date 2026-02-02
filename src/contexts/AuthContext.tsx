@@ -19,6 +19,7 @@ interface AuthContextType {
   isLoading: boolean;
   signInAccount: (email: string, password: string) => Promise<void>;
   registerAccount: (email: string, password: string) => Promise<void>;
+  sendVerificationEmail: () => Promise<void>;
   logout: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
   // Keep quickLogin for backward compatibility during transition
@@ -56,15 +57,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     console.log('DEBUG: registerAccount called with:', email);
     console.trace('RegisterAccount call stack');
     try {
-      const { createUserWithEmailAndPassword } = await import('firebase/auth');
+      const { createUserWithEmailAndPassword, sendEmailVerification } = await import('firebase/auth');
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+      // Send verification email immediately
+      await sendEmailVerification(userCredential.user);
+
       logger.logAuthEvent('Registration successful', {
         uid: userCredential.user.uid,
         email: userCredential.user.email
       });
     } catch (error: any) {
-      console.error('DEBUG: Firebase Registration Error:', error);
-      logger.error('Registration failed', error, { email });
+      // Don't spam console error for expected validation errors
+      if (error.code !== 'auth/email-already-in-use' && error.code !== 'auth/weak-password') {
+        console.error('DEBUG: Firebase Registration Error:', error);
+        logger.error('Registration failed', error, { email });
+      }
+      throw error;
+    }
+  }, []);
+
+  const sendVerificationEmail = useCallback(async (): Promise<void> => {
+    if (!auth.currentUser) return;
+    try {
+      const { sendEmailVerification } = await import('firebase/auth');
+      await sendEmailVerification(auth.currentUser);
+      logger.logAuthEvent('Verification email sent', { email: auth.currentUser.email });
+    } catch (error: any) {
+      logger.error('Failed to send verification email', error);
       throw error;
     }
   }, []);
@@ -75,6 +95,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const { signInWithEmailAndPassword } = await import('firebase/auth');
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
+
       logger.logAuthEvent('SignIn successful', {
         uid: userCredential.user.uid,
         email: userCredential.user.email
@@ -123,6 +144,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       isLoading,
       signInAccount,
       registerAccount,
+      sendVerificationEmail,
       logout,
       resetPassword,
       quickLogin

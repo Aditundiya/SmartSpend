@@ -27,7 +27,7 @@ import AiInsights from '@/components/AiInsights';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import RecurringExpenseManager from '@/components/RecurringExpenseManager';
 import OnboardingWizard from '@/components/OnboardingWizard';
-
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 
 const calculateRecurringIncomesForMonth = (profileId: string, year: number, month: number): number => {
@@ -373,131 +373,133 @@ function DashboardContent() {
             </div>
           )}
 
-          <div className="space-y-8">
+          <div className="space-y-4">
             {isLoadingData && <p className="text-center py-10">Loading financial data for {currentProfile.name}...</p>}
 
             {!isLoadingData && (
               <>
-                {/* Mobile Quick Expense Entry - only show if not in read-only mode */}
-                {!isReadOnlyMode && (
-                  <div className="lg:hidden mb-8" id="quick-add">
-                    <QuickExpenseEntry
-                      profileId={currentProfile.id}
-                      onExpenseAdded={handleAddExpense}
-                    />
-                  </div>
-                )}
+                {/* Mobile Tabs for Better UX */}
+                <div className="block">
+                  <Tabs defaultValue="daily" className="w-full">
+                    <TabsList className="grid w-full grid-cols-3 mb-6 sticky top-2 z-30 shadow-sm">
+                      <TabsTrigger value="daily">Daily</TabsTrigger>
+                      <TabsTrigger value="analysis">Analysis</TabsTrigger>
+                      <TabsTrigger value="recurring">Recurring</TabsTrigger>
+                    </TabsList>
 
-                <SummaryCards expenses={expenses} totalManualIncomes={totalManuallyLoggedIncome} calculatedRecurringIncome={calculatedRecurringIncome} />
-
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-                  <div className="lg:col-span-2 space-y-8">
-                    <SpendingChart data={spendingByCategory.filter(d => d.total > 0)} />
-                  </div>
-                  <div className="space-y-4">
-                    <Card className="shadow-md">
-                      <CardHeader>
-                        <CardTitle className="font-headline text-lg">Monthly Financial Snapshot</CardTitle>
-                        <CardDescription>Income, expenses, and balance for {currentProfile.name}.</CardDescription>
-                      </CardHeader>
-                      <CardContent className="text-sm space-y-3">
-                        <div>
-                          <h4 className="font-semibold mb-1">Income</h4>
-                          <div className="flex justify-between">
-                            <span>Recurring:</span>
-                            <span className="font-medium">{formatCurrency(calculatedRecurringIncome)}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span>Manually Logged:</span>
-                            <span className="font-medium">{formatCurrency(totalManuallyLoggedIncome)}</span>
-                          </div>
-                          <hr className="my-1 border-border/50" />
-                          <div className="flex justify-between font-bold">
-                            <span>Total Income:</span>
-                            <span className="text-accent">{formatCurrency(totalIncomeForMonth)}</span>
-                          </div>
+                    {/* TAB A: DAILY (Action focused) */}
+                    <TabsContent value="daily" className="space-y-6">
+                      {/* 1. Quick Add (Mobile Only - Prominent) */}
+                      {!isReadOnlyMode && (
+                        <div className="lg:hidden" id="quick-add">
+                          <QuickExpenseEntry
+                            profileId={currentProfile.id}
+                            onExpenseAdded={handleAddExpense}
+                          />
                         </div>
-                        <hr className="my-2 border-border" />
-                        <div>
-                          <div className="flex justify-between font-bold">
-                            <span>Total Expenses:</span>
-                            <span className="text-destructive">{formatCurrency(totalSpending)}</span>
-                          </div>
-                        </div>
-                        <hr className="my-2 border-border" />
-                        <div>
-                          <div className="flex justify-between font-bold text-base items-center">
-                            <span>Net Balance:</span>
-                            <span className={netBalance >= 0 ? 'text-accent' : 'text-destructive'}>
-                              {formatCurrency(netBalance)}
-                            </span>
-                          </div>
-                          {totalIncomeForMonth > 0 && (
-                            <div className="flex justify-between text-xs mt-1 items-center">
-                              <span>Savings Rate:</span>
-                              <span className={`font-medium flex items-center ${savingsRate >= 0 ? 'text-accent' : 'text-destructive'}`}>
-                                {savingsRate >= 0 ? <TrendingUp className="h-4 w-4 mr-1" /> : <TrendingDown className="h-4 w-4 mr-1" />}
-                                {savingsRate.toFixed(1)}%
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                      </CardContent>
-                    </Card>
-                    <AiInsights expenses={expenses} totalIncome={totalIncomeForMonth} currentProfile={currentProfile} />
-                    <RecurringExpenseManager
-                      profileId={currentProfile.id}
-                      onRecurringExpenseChange={async () => {
-                        const fetchedExpenses = await getExpenses(currentProfile.id, viewingDate.getFullYear(), viewingDate.getMonth());
-                        setExpenses(fetchedExpenses);
-                      }}
-                    />
-                  </div>
-                </div>
+                      )}
 
-                {(expenses.length === 0 && manuallyLoggedincomes.length === 0 && calculatedRecurringIncome === 0) && (
-                  <Card className="shadow-lg">
-                    <CardHeader>
-                      <CardTitle>Welcome to SmartSpend, {currentProfile.name}!</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-muted-foreground">
-                        It looks like you don't have any financial data for {format(viewingDate, 'MMMM yyyy')}.
-                        Start by adding some expenses or any additional incomes using the forms below.
-                      </p>
-                    </CardContent>
-                  </Card>
-                )}
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-                  <Card className="shadow-lg">
-                    <CardHeader>
-                      <CardTitle className="font-headline flex items-center">
-                        <PlusCircle className="h-6 w-6 mr-2 text-primary" />
-                        Add New Expense for {currentProfile.name}
-                      </CardTitle>
-                      <CardDescription>
-                        Log your recent spending.
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <ExpenseForm
-                        categories={CATEGORIES}
-                        profiles={PERSONS}
-                        onFormSubmit={handleAddExpense}
-                        defaultDate={viewingDate}
-                        mode="add"
-                        currentProfileIdForAddMode={user?.uid || currentProfile.id}
-                        disabled={isLoadingData}
+                      {/* 2. Vital Stats */}
+                      <SummaryCards
+                        expenses={expenses}
+                        totalManualIncomes={totalManuallyLoggedIncome}
+                        calculatedRecurringIncome={calculatedRecurringIncome}
+                        previousPeriodSpending={previousExpenses.reduce((sum, e) => sum + e.amount, 0)}
                       />
-                    </CardContent>
-                  </Card>
-                  <IncomeForm
-                    onFormSubmit={handleAddIncomeFormSubmitWrapped}
-                    currentViewingDateForAdd={viewingDate}
-                    mode="add"
-                    disabled={isLoadingData}
-                  />
+
+                      {/* 3. Empty State or Recent Activity Placeholder */}
+                      {(expenses.length === 0 && manuallyLoggedincomes.length === 0 && calculatedRecurringIncome === 0) && (
+                        <Card className="shadow-sm">
+                          <CardHeader>
+                            <CardTitle className="text-lg">No Activity Yet</CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <p className="text-muted-foreground text-sm">
+                              Start by adding an expense above!
+                            </p>
+                          </CardContent>
+                        </Card>
+                      )}
+
+                      {/* Desktop Add Forms (Hidden on Mobile usually, but kept for desktop view consistency if needed) */}
+                      <div className="hidden lg:grid grid-cols-1 md:grid-cols-2 gap-8 items-start mt-8">
+                        <Card className="shadow-lg">
+                          <CardHeader>
+                            <CardTitle className="font-headline flex items-center">
+                              <PlusCircle className="h-6 w-6 mr-2 text-primary" />
+                              Add New Expense
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <ExpenseForm
+                              categories={CATEGORIES}
+                              profiles={PERSONS}
+                              onFormSubmit={handleAddExpense}
+                              defaultDate={viewingDate}
+                              mode="add"
+                              currentProfileIdForAddMode={user?.uid || currentProfile.id}
+                              disabled={isLoadingData}
+                            />
+                          </CardContent>
+                        </Card>
+                        <IncomeForm
+                          onFormSubmit={handleAddIncomeFormSubmitWrapped}
+                          currentViewingDateForAdd={viewingDate}
+                          mode="add"
+                          disabled={isLoadingData}
+                        />
+                      </div>
+                    </TabsContent>
+
+                    {/* TAB B: ANALYSIS (Charts & Deep Dive) */}
+                    <TabsContent value="analysis" className="space-y-6">
+                      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                        <div className="lg:col-span-2 space-y-8">
+                          <SpendingChart data={spendingByCategory.filter(d => d.total > 0)} />
+                        </div>
+                        <div className="space-y-4">
+                          <Card className="shadow-md">
+                            <CardHeader>
+                              <CardTitle className="font-headline text-lg">Monthly Snapshot</CardTitle>
+                              <CardDescription>Income vs Expenses</CardDescription>
+                            </CardHeader>
+                            <CardContent className="text-sm space-y-3">
+                              {/* Consolidated Snapshot Content */}
+                              <div>
+                                <div className="flex justify-between font-bold">
+                                  <span>Total Income:</span>
+                                  <span className="text-accent">{formatCurrency(totalIncomeForMonth)}</span>
+                                </div>
+                                <div className="flex justify-between font-bold mt-2">
+                                  <span>Total Expenses:</span>
+                                  <span className="text-destructive">{formatCurrency(totalSpending)}</span>
+                                </div>
+                                <hr className="my-2 border-border" />
+                                <div className="flex justify-between font-bold text-base items-center">
+                                  <span>Net Balance:</span>
+                                  <span className={netBalance >= 0 ? 'text-accent' : 'text-destructive'}>
+                                    {formatCurrency(netBalance)}
+                                  </span>
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
+                          <AiInsights expenses={expenses} totalIncome={totalIncomeForMonth} currentProfile={currentProfile} />
+                        </div>
+                      </div>
+                    </TabsContent>
+
+                    {/* TAB C: RECURRING (Management) */}
+                    <TabsContent value="recurring" className="space-y-6">
+                      <RecurringExpenseManager
+                        profileId={currentProfile.id}
+                        onRecurringExpenseChange={async () => {
+                          const fetchedExpenses = await getExpenses(currentProfile.id, viewingDate.getFullYear(), viewingDate.getMonth());
+                          setExpenses(fetchedExpenses);
+                        }}
+                      />
+                    </TabsContent>
+                  </Tabs>
                 </div>
               </>
             )}
@@ -505,8 +507,8 @@ function DashboardContent() {
         </main>
       </ScrollArea>
       <footer className="text-center py-4 border-t text-sm text-muted-foreground">
-        {currentYear && <>© {currentYear} SmartSpend. All rights reserved.</>}
-        {!currentYear && <>© SmartSpend. All rights reserved.</>}
+        {currentYear && <>© {currentYear} Spentra. All rights reserved.</>}
+        {!currentYear && <>© Spentra. All rights reserved.</>}
       </footer>
     </div>
   );

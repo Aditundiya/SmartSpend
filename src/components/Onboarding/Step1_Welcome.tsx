@@ -28,7 +28,7 @@ export default function Step1_Welcome({ onNext }: Step1WelcomeProps) {
             </div>
 
             <div className="text-center space-y-4">
-                <h3 className="text-lg font-medium">Why SmartSpend?</h3>
+                <h3 className="text-lg font-medium">Why Spentra?</h3>
                 <ul className="text-left text-sm space-y-3 pl-4">
                     <li className="flex items-start gap-2">
                         <span className="text-green-500 font-bold">✓</span>

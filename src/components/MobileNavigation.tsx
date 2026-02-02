@@ -82,19 +82,11 @@ export default function MobileNavigation() {
         <div className="flex items-center justify-between px-4 py-3">
           <Link href="/" className="flex items-center gap-2">
             <PiggyBank className="h-6 w-6 text-primary" />
-            <span className="font-bold text-lg">SmartSpend</span>
+            <span className="font-bold text-lg">Spentra</span>
           </Link>
 
           <div className="flex items-center gap-2">
-            {/* Quick Add Button */}
-            {currentProfile && !profileLoading && (
-              <Button size="sm" asChild>
-                <Link href="/#quick-add">
-                  <Plus className="h-4 w-4" />
-                </Link>
-              </Button>
-            )}
-
+            {/* Quick Add Button - REMOVED for cleanup */}
             {/* Menu Button */}
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
@@ -110,7 +102,7 @@ export default function MobileNavigation() {
                   {/* Header */}
                   <div className="flex items-center gap-2 pb-4 border-b">
                     <PiggyBank className="h-6 w-6 text-primary" />
-                    <span className="font-bold text-lg">SmartSpend</span>
+                    <span className="font-bold text-lg">Spentra</span>
                   </div>
 
                   {/* Profile Info */}
@@ -238,21 +230,6 @@ export default function MobileNavigation() {
             );
           })}
 
-          {/* Settings in bottom nav */}
-          {currentProfile && !profileLoading && (
-            <Link
-              href="/settings"
-              className={cn(
-                "flex flex-col items-center gap-1 px-3 py-2 rounded-lg transition-colors min-w-0",
-                pathname === '/settings'
-                  ? "text-primary"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              <Settings className="h-5 w-5" />
-              <span className="text-xs font-medium">Settings</span>
-            </Link>
-          )}
         </div>
       </nav>
     </>

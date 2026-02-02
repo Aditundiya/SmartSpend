@@ -8,8 +8,8 @@
  * - SpendingInsightsOutput - The return type for the flow.
  */
 
-import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
+import { ai } from '@/ai/genkit';
+import { z } from 'genkit';
 
 const ExpenseInputSchema = z.object({
   categoryName: z.string().describe('The name of the spending category.'),
@@ -37,10 +37,10 @@ export async function generateSpendingInsights(input: SpendingInsightsInput): Pr
 
 const generateSpendingInsightsPrompt = ai.definePrompt({
   name: 'generateSpendingInsightsPrompt',
-  input: {schema: SpendingInsightsInputSchema},
-  output: {schema: SpendingInsightsOutputSchema},
+  input: { schema: SpendingInsightsInputSchema },
+  output: { schema: SpendingInsightsOutputSchema },
   prompt: `
-    You are a friendly financial assistant for the SmartSpend app.
+    You are a friendly financial assistant for the Spentra app.
     Your goal is to provide a brief, helpful, and encouraging insight into a user's spending for the month.
     {{#if userName}}The user's name is {{userName}}. Address them by their name if you can.{{/if}}
 
@@ -100,8 +100,8 @@ const generateSpendingInsightsFlow = ai.defineFlow(
     const totalSpending = input.expenses.reduce((sum, exp) => sum + exp.amount, 0);
 
     const result = await generateSpendingInsightsPrompt({
-        ...input,
-        // You could add more processed data here if needed by the prompt, e.g., totalSpending
+      ...input,
+      // You could add more processed data here if needed by the prompt, e.g., totalSpending
     });
 
     const output = result.output;

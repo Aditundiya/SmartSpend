@@ -1,7 +1,7 @@
 // Offline storage using IndexedDB for PWA functionality
 import type { Expense, Income } from '@/lib/types';
 
-const DB_NAME = 'SmartSpendDB';
+const DB_NAME = 'SpentraDB';
 const DB_VERSION = 1;
 const EXPENSES_STORE = 'offline_expenses';
 const INCOMES_STORE = 'offline_incomes';

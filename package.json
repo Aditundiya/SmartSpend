@@ -15,6 +15,9 @@
     "test:coverage": "vitest --coverage"
   },
   "dependencies": {
+    "@capacitor/android": "^8.0.2",
+    "@capacitor/cli": "^8.0.2",
+    "@capacitor/core": "^8.0.2",
     "@genkit-ai/firebase": "1.8.0",
     "@genkit-ai/googleai": "1.8.0",
     "@genkit-ai/next": "1.8.0",

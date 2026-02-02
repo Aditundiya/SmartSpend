@@ -6,8 +6,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Sparkles, AlertTriangle, Info } from 'lucide-react';
 import type { Expense, Profile } from '@/lib/types';
-import { generateSpendingInsights, type SpendingInsightsInput } from '@/ai/flows/generate-spending-insights';
+// import { generateSpendingInsights, type SpendingInsightsInput } from '@/ai/flows/generate-spending-insights';
 import { CATEGORIES } from '@/data/constants';
+
+// Mock types for static build compatibility
+type SpendingInsightsInput = any;
 
 interface AiInsightsProps {
   expenses: Expense[];
@@ -27,12 +30,20 @@ export default function AiInsights({ expenses, totalIncome, currentProfile }: Ai
   const hasData = hasExpenses || hasIncome;
 
   const handleGetInsights = async () => {
-    if (!hasData) return; // Should be redundant due to button state, but good for safety
+    if (!hasData) return;
 
     setIsLoading(true);
     setError(null);
     setInsight(null);
 
+    // Mock delay to simulate AI processing
+    setTimeout(() => {
+      setIsLoading(false);
+      setInsight("AI Insights are currently disabled on the mobile app version. \n\nWe are working on bringing this feature to your phone soon!");
+    }, 1500);
+
+    /* 
+    // SERVER ACTION DISABLED FOR STATIC EXPORT (ANDROID)
     const formattedExpenses = expenses.map(exp => ({
       categoryName: categoryMap.get(exp.categoryId) || 'Other',
       amount: exp.amount,
@@ -53,6 +64,7 @@ export default function AiInsights({ expenses, totalIncome, currentProfile }: Ai
     } finally {
       setIsLoading(false);
     }
+    */
   };
 
   if (!currentProfile) {
@@ -109,9 +121,9 @@ export default function AiInsights({ expenses, totalIncome, currentProfile }: Ai
         )}
       </CardContent>
       <CardFooter>
-        <Button 
-          onClick={handleGetInsights} 
-          disabled={isLoading || !hasData} 
+        <Button
+          onClick={handleGetInsights}
+          disabled={isLoading || !hasData}
           className="w-full"
         >
           <Sparkles className="mr-2 h-4 w-4" />

@@ -6,7 +6,9 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   serverExternalPackages: ['express', 'genkit', '@genkit-ai/core', '@genkit-ai/googleai', '@genkit-ai/firebase'],
+  output: 'export', // Required for Capacitor
   images: {
+    unoptimized: true, // Required for static export
     remotePatterns: [
       {
         protocol: 'https',

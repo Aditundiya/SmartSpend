@@ -237,30 +237,57 @@ function OverviewContent() {
                   </CardHeader>
                   <CardContent>
                     {profileFinancialSummaries.length > 0 ? (
-                      <div className="overflow-x-auto">
-                        <Table>
-                          <TableHeader>
-                            <TableRow>
-                              <TableHead>Profile</TableHead>
-                              <TableHead className="text-right">Total Income</TableHead>
-                              <TableHead className="text-right">Total Expenses</TableHead>
-                              <TableHead className="text-right">Net Balance</TableHead>
-                            </TableRow>
-                          </TableHeader>
-                          <TableBody>
-                            {profileFinancialSummaries.map((summary) => (
-                              <TableRow key={summary.profileId}>
-                                <TableCell className="font-medium whitespace-nowrap">{summary.name}</TableCell>
-                                <TableCell className="text-right text-accent whitespace-nowrap">{formatCurrency(summary.totalIncome)}</TableCell>
-                                <TableCell className="text-right text-destructive whitespace-nowrap">{formatCurrency(summary.totalExpenses)}</TableCell>
-                                <TableCell className={`text-right font-semibold whitespace-nowrap ${summary.netBalance >= 0 ? 'text-accent' : 'text-destructive'}`}>
-                                  {formatCurrency(summary.netBalance)}
-                                </TableCell>
+                      <>
+                        {/* Desktop Table View */}
+                        <div className="hidden lg:block overflow-x-auto">
+                          <Table>
+                            <TableHeader>
+                              <TableRow>
+                                <TableHead>Profile</TableHead>
+                                <TableHead className="text-right">Total Income</TableHead>
+                                <TableHead className="text-right">Total Expenses</TableHead>
+                                <TableHead className="text-right">Net Balance</TableHead>
                               </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </div>
+                            </TableHeader>
+                            <TableBody>
+                              {profileFinancialSummaries.map((summary) => (
+                                <TableRow key={summary.profileId}>
+                                  <TableCell className="font-medium whitespace-nowrap">{summary.name}</TableCell>
+                                  <TableCell className="text-right text-accent whitespace-nowrap">{formatCurrency(summary.totalIncome)}</TableCell>
+                                  <TableCell className="text-right text-destructive whitespace-nowrap">{formatCurrency(summary.totalExpenses)}</TableCell>
+                                  <TableCell className={`text-right font-semibold whitespace-nowrap ${summary.netBalance >= 0 ? 'text-accent' : 'text-destructive'}`}>
+                                    {formatCurrency(summary.netBalance)}
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </div>
+
+                        {/* Mobile Card View */}
+                        <div className="lg:hidden space-y-4">
+                          {profileFinancialSummaries.map((summary) => (
+                            <div key={summary.profileId} className="p-4 border rounded-lg bg-card text-card-foreground shadow-sm space-y-3">
+                              <div className="flex justify-between items-center border-b pb-2">
+                                <h4 className="font-semibold">{summary.name}</h4>
+                                <span className={`font-bold ${summary.netBalance >= 0 ? 'text-green-600' : 'text-red-500'}`}>
+                                  {formatCurrency(summary.netBalance)}
+                                </span>
+                              </div>
+                              <div className="grid grid-cols-2 gap-2 text-sm">
+                                <div>
+                                  <p className="text-muted-foreground text-xs">Total Income</p>
+                                  <p className="font-medium text-green-600">{formatCurrency(summary.totalIncome)}</p>
+                                </div>
+                                <div className="text-right">
+                                  <p className="text-muted-foreground text-xs">Total Expenses</p>
+                                  <p className="font-medium text-red-500">{formatCurrency(summary.totalExpenses)}</p>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </>
                     ) : (
                       !isLoadingData && <p className="text-muted-foreground text-center py-5">No individual profile data to display for this period.</p>
                     )}
@@ -278,8 +305,8 @@ function OverviewContent() {
         </main>
       </ScrollArea>
       <footer className="text-center py-4 border-t text-sm text-muted-foreground">
-        {currentYear && <>© {currentYear} SmartSpend. All rights reserved.</>}
-        {!currentYear && <>© SmartSpend. All rights reserved.</>}
+        {currentYear && <>© {currentYear} Spentra. All rights reserved.</>}
+        {!currentYear && <>© Spentra. All rights reserved.</>}
       </footer>
     </div>
   );

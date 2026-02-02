@@ -74,9 +74,9 @@ export default function SignupPage() {
                             <Wallet className="h-8 w-8 text-primary" />
                         </div>
                     </div>
-                    <CardTitle className="text-2xl font-bold">Create your account</CardTitle>
+                    <CardTitle className="text-2xl font-bold">Create your Spentra account</CardTitle>
                     <CardDescription>
-                        Join SmartSpend to take control of your financial future
+                        Join Spentra to take control of your financial future
                     </CardDescription>
                 </CardHeader>
                 <CardContent>

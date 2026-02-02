@@ -7,7 +7,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 
 export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { isLoggedIn, isLoading } = useAuth();
+  const { isLoggedIn, isLoading, user } = useAuth();
   const { currentProfile, loading: profileLoading } = useProfile();
   const router = useRouter();
   const pathname = usePathname();
@@ -18,8 +18,22 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
       return;
     }
 
+    // Email Verification Check
+    if (!isLoading && isLoggedIn && user) {
+      // If unverified and NOT on verify page, go to verify page
+      if (!user.emailVerified && pathname !== '/verify-email') {
+        router.replace('/verify-email');
+        return;
+      }
+      // If verified and ON verify page, go to dashboard
+      if (user.emailVerified && pathname === '/verify-email') {
+        router.replace('/');
+        return;
+      }
+    }
+
     // Check if user needs onboarding
-    if (!isLoading && isLoggedIn && !profileLoading && pathname !== '/onboarding') {
+    if (!isLoading && isLoggedIn && !profileLoading && pathname !== '/onboarding' && pathname !== '/verify-email' && user?.emailVerified) {
       // If no profile, redirect to onboarding.
       // For existing users who might lack the 'hasCompletedOnboarding' flag but have a name,
       // we allow them through to prevent blocking valid accounts.
@@ -32,7 +46,7 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
         router.replace('/onboarding');
       }
     }
-  }, [isLoading, isLoggedIn, router, profileLoading, currentProfile, pathname]);
+  }, [isLoading, isLoggedIn, router, profileLoading, currentProfile, pathname, user]);
 
   if (isLoading || !isLoggedIn || (profileLoading && isLoggedIn)) {
     return (

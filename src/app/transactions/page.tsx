@@ -299,45 +299,119 @@ function TransactionsContent() {
               {isLoading && <p className="text-center py-10">Loading transactions for {currentProfile.name}...</p>}
 
               {!isLoading && expenses.length > 0 ? (
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Date</TableHead>
-                        <TableHead>Description</TableHead>
-                        <TableHead>Category</TableHead>
-                        <TableHead>Profile</TableHead>
-                        <TableHead className="text-right">Amount</TableHead>
-                        <TableHead className="text-center">Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {expenses.map((expense) => {
-                        const expenseProfile = allProfiles.find(p => p.id === expense.profileId);
-                        return (
-                          <TableRow key={expense.id}>
-                            <TableCell className="whitespace-nowrap">{format(expense.date, 'MMM dd, yyyy')}</TableCell>
-                            <TableCell className="font-medium min-w-[150px]">{expense.description}</TableCell>
-                            <TableCell>
-                              <Badge variant="secondary">{getCategoryName(expense.categoryId)}</Badge>
-                            </TableCell>
-                            <TableCell>
-                              <Badge
-                                variant="outline"
-                                className={expense.profileId === user?.uid ? "bg-primary/10 text-primary border-primary" : ""}
-                              >
-                                {expenseProfile?.name || 'Unknown'}
-                              </Badge>
-                            </TableCell>
-                            <TableCell className="text-right">{formatCurrency(expense.amount)}</TableCell>
-                            <TableCell className="text-center space-x-1">
+                <>
+                  {/* Desktop Table View */}
+                  <div className="hidden lg:block overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Date</TableHead>
+                          <TableHead>Description</TableHead>
+                          <TableHead>Category</TableHead>
+                          <TableHead>Profile</TableHead>
+                          <TableHead className="text-right">Amount</TableHead>
+                          <TableHead className="text-center">Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {expenses.map((expense) => {
+                          const expenseProfile = allProfiles.find(p => p.id === expense.profileId);
+                          return (
+                            <TableRow key={expense.id}>
+                              <TableCell className="whitespace-nowrap">{format(expense.date, 'MMM dd, yyyy')}</TableCell>
+                              <TableCell className="font-medium min-w-[150px]">{expense.description}</TableCell>
+                              <TableCell>
+                                <Badge variant="secondary">{getCategoryName(expense.categoryId)}</Badge>
+                              </TableCell>
+                              <TableCell>
+                                <Badge
+                                  variant="outline"
+                                  className={expense.profileId === user?.uid ? "bg-primary/10 text-primary border-primary" : ""}
+                                >
+                                  {expenseProfile?.name || 'Unknown'}
+                                </Badge>
+                              </TableCell>
+                              <TableCell className="text-right">{formatCurrency(expense.amount)}</TableCell>
+                              <TableCell className="text-center space-x-1">
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="text-blue-600 hover:text-blue-700"
+                                  onClick={() => handleOpenEditDialog(expense)}
+                                  disabled={isLoading || expense.profileId !== user?.uid}
+                                  title={expense.profileId !== user?.uid ? "You can only edit your own expenses" : "Edit expense"}
+                                >
+                                  <Edit className="h-4 w-4" />
+                                </Button>
+                                <AlertDialog>
+                                  <AlertDialogTrigger asChild>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="text-destructive hover:text-destructive/90"
+                                      disabled={isLoading || expense.profileId !== user?.uid}
+                                      title={expense.profileId !== user?.uid ? "You can only delete your own expenses" : "Delete expense"}
+                                    >
+                                      <Trash2 className="h-4 w-4" />
+                                    </Button>
+                                  </AlertDialogTrigger>
+                                  <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle>Delete Expense?</AlertDialogTitle>
+                                      <AlertDialogDescription>
+                                        Are you sure you want to delete the expense: "{expense.description}"? This action cannot be undone.
+                                      </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                      <AlertDialogAction
+                                        onClick={() => handleDeleteExpense(expense.id, expense.profileId)}
+                                        className="bg-destructive hover:bg-destructive/90 text-destructive-foreground"
+                                      >
+                                        Delete
+                                      </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialog>
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
+                  </div>
+
+                  {/* Mobile Card View */}
+                  <div className="lg:hidden space-y-4">
+                    {expenses.map((expense) => {
+                      const expenseProfile = allProfiles.find(p => p.id === expense.profileId);
+                      return (
+                        <div key={expense.id} className="p-4 border rounded-lg bg-card text-card-foreground shadow-sm flex flex-col gap-3">
+                          <div className="flex justify-between items-start">
+                            <div className="space-y-1">
+                              <h4 className="font-semibold">{expense.description}</h4>
+                              <p className="text-xs text-muted-foreground">{format(expense.date, 'MMM dd, yyyy')}</p>
+                            </div>
+                            <span className="font-bold text-lg">{formatCurrency(expense.amount)}</span>
+                          </div>
+
+                          <div className="flex justify-between items-center text-sm">
+                            <div className="flex gap-2">
+                              <Badge variant="secondary" className="text-xs">{getCategoryName(expense.categoryId)}</Badge>
+                              {expenseProfile && (
+                                <Badge variant="outline" className={`text-xs ${expense.profileId === user?.uid ? "bg-primary/10 text-primary border-primary" : ""}`}>
+                                  {expenseProfile.name}
+                                </Badge>
+                              )}
+                            </div>
+
+                            <div className="flex gap-2">
                               <Button
                                 variant="ghost"
-                                size="icon"
-                                className="text-blue-600 hover:text-blue-700"
+                                size="sm"
+                                className="h-8 w-8 p-0 text-blue-600"
                                 onClick={() => handleOpenEditDialog(expense)}
                                 disabled={isLoading || expense.profileId !== user?.uid}
-                                title={expense.profileId !== user?.uid ? "You can only edit your own expenses" : "Edit expense"}
                               >
                                 <Edit className="h-4 w-4" />
                               </Button>
@@ -345,10 +419,9 @@ function TransactionsContent() {
                                 <AlertDialogTrigger asChild>
                                   <Button
                                     variant="ghost"
-                                    size="icon"
-                                    className="text-destructive hover:text-destructive/90"
+                                    size="sm"
+                                    className="h-8 w-8 p-0 text-destructive"
                                     disabled={isLoading || expense.profileId !== user?.uid}
-                                    title={expense.profileId !== user?.uid ? "You can only delete your own expenses" : "Delete expense"}
                                   >
                                     <Trash2 className="h-4 w-4" />
                                   </Button>
@@ -357,27 +430,27 @@ function TransactionsContent() {
                                   <AlertDialogHeader>
                                     <AlertDialogTitle>Delete Expense?</AlertDialogTitle>
                                     <AlertDialogDescription>
-                                      Are you sure you want to delete the expense: "{expense.description}"? This action cannot be undone.
+                                      Are you sure? This cannot be undone.
                                     </AlertDialogDescription>
                                   </AlertDialogHeader>
                                   <AlertDialogFooter>
                                     <AlertDialogCancel>Cancel</AlertDialogCancel>
                                     <AlertDialogAction
                                       onClick={() => handleDeleteExpense(expense.id, expense.profileId)}
-                                      className="bg-destructive hover:bg-destructive/90 text-destructive-foreground"
+                                      className="bg-destructive"
                                     >
                                       Delete
                                     </AlertDialogAction>
                                   </AlertDialogFooter>
                                 </AlertDialogContent>
                               </AlertDialog>
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })}
-                    </TableBody>
-                  </Table>
-                </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </>
               ) : (
                 !isLoading && <p className="text-muted-foreground text-center py-10">No transactions recorded for {currentProfile.name} in {format(viewingDate, 'MMMM yyyy')}.</p>
               )}

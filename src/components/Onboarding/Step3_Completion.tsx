@@ -20,6 +20,7 @@ interface Step3CompletionProps {
 export default function Step3_Completion({ onBack }: Step3CompletionProps) {
     const { user } = useAuth();
     const router = useRouter();
+    const { refreshProfile } = useProfile(); // Moved to top level
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [addSampleData, setAddSampleData] = useState(true);
 
@@ -42,7 +43,7 @@ export default function Step3_Completion({ onBack }: Step3CompletionProps) {
             }
 
             // 3. Refresh profile state in context
-            const { refreshProfile } = useProfile(); // We need to handle this differently if we can't use hook here
+            await refreshProfile();
             // Wait, handleFinish is inside component, so we can use useProfile there.
 
             // 4. Redirect to dashboard
