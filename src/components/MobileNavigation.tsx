@@ -79,7 +79,7 @@ export default function MobileNavigation() {
   return (
     <>
       {/* Mobile Header */}
-      <header className="lg:hidden bg-card border-b border-border sticky top-0 z-40">
+      <header className="lg:hidden bg-card border-b border-border sticky top-0 z-40 pt-[env(safe-area-inset-top)]">
         <div className="flex items-center justify-between px-4 py-4">
           <Link href="/" className="flex items-center gap-2">
             <div className="relative h-7 w-7">

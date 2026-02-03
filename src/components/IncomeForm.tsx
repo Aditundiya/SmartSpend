@@ -35,9 +35,14 @@ export default function IncomeForm({
   disabled = false,
   isDialog = false,
 }: IncomeFormProps) {
-  const form = useForm<IncomeFormValues>({ // Use imported IncomeFormValues
+  const form = useForm<IncomeFormValues>({
     resolver: zodResolver(incomeFormSchema),
-    defaultValues: {
+    defaultValues: mode === 'edit' && initialValues ? {
+      description: initialValues.description,
+      amount: initialValues.amount,
+      frequency: initialValues.frequency,
+      date: initialValues.date instanceof Date ? initialValues.date : new Date(initialValues.date),
+    } : {
       description: '',
       amount: '' as any,
       frequency: 'one-time',
@@ -45,6 +50,7 @@ export default function IncomeForm({
     },
   });
 
+  // Only reset form if mode changes or initialValues change (for switching between edit items)
   useEffect(() => {
     if (mode === 'edit' && initialValues) {
       form.reset({
@@ -53,43 +59,16 @@ export default function IncomeForm({
         frequency: initialValues.frequency,
         date: initialValues.date instanceof Date ? initialValues.date : new Date(initialValues.date),
       });
-    } else if (mode === 'add') {
-      form.reset({
-        description: '',
-        amount: '' as any,
-        frequency: 'one-time',
-        date: startOfMonth(currentViewingDateForAdd),
-      });
     }
-  }, [mode, initialValues, form, currentViewingDateForAdd]);
+  }, [mode, initialValues, form]);
 
-  useEffect(() => {
-    if (disabled) {
-      form.reset({
-        description: '',
-        amount: '' as any,
-        frequency: 'one-time',
-        date: startOfMonth(currentViewingDateForAdd),
-      });
-    } else {
-      if (mode === 'add') {
-         form.setValue('date', startOfMonth(currentViewingDateForAdd));
-      } else if (mode === 'edit' && initialValues) {
-         const validDate = initialValues.date instanceof Date && !isNaN(initialValues.date.getTime())
-                           ? initialValues.date
-                           : new Date(initialValues.date);
-         form.setValue('date', validDate);
-      }
-    }
-  }, [disabled, form, currentViewingDateForAdd, mode, initialValues]);
-
-
-  async function onSubmit(data: IncomeFormValues) { // Use imported IncomeFormValues
+  async function onSubmit(data: IncomeFormValues) {
     const dataToSubmit = {
       ...data,
       date: data.date instanceof Date && !isNaN(data.date.getTime()) ? data.date : new Date(data.date),
     };
     await onFormSubmit(dataToSubmit, mode === 'edit' ? initialValues?.id : undefined);
+
     if (mode === 'add') {
       form.reset({
         description: '',
@@ -103,8 +82,8 @@ export default function IncomeForm({
   const calendarDefaultMonth = mode === 'edit' && initialValues && initialValues.date instanceof Date && !isNaN(initialValues.date.getTime())
     ? initialValues.date
     : currentViewingDateForAdd instanceof Date && !isNaN(currentViewingDateForAdd.getTime())
-    ? currentViewingDateForAdd
-    : new Date();
+      ? currentViewingDateForAdd
+      : new Date();
 
 
   const formContent = (
@@ -188,7 +167,7 @@ export default function IncomeForm({
                       selected={field.value instanceof Date && !isNaN(field.value.getTime()) ? field.value : undefined}
                       onSelect={(selectedDate) => field.onChange(selectedDate || startOfMonth(currentViewingDateForAdd))}
                       defaultMonth={calendarDefaultMonth}
-                      disabled={(date) => date > new Date() || date < new Date('2000-01-01')}
+                      disabled={(date) => date < new Date('2000-01-01')}
                       initialFocus
                     />
                   </PopoverContent>
