@@ -33,8 +33,9 @@ import {
   DialogDescription as ShadDialogDescription,
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { getIncomes, deleteIncomeFS, updateIncomeFS } from '@/lib/firebase';
+import { getIncomes, deleteIncomeFS, updateIncomeFS, addIncomeFS } from '@/lib/firebase';
 import IncomeForm from '@/components/IncomeForm';
+import AddIncomeDialog from '@/components/AddIncomeDialog';
 import { useProfile } from '@/contexts/ProfileContext';
 import { useCurrency } from '@/hooks/use-currency';
 import ProtectedRoute from '@/components/ProtectedRoute';
@@ -162,6 +163,38 @@ function IncomesContent() {
     }
   };
 
+  const handleAddIncome = async (data: IncomeFormValues) => {
+    if (!currentProfile) return;
+    setIsLoading(true);
+
+    const incomeToAdd: Omit<Income, 'id'> = {
+      description: data.description,
+      amount: data.amount,
+      frequency: data.frequency,
+      date: data.date,
+      profileId: currentProfile.id,
+    };
+
+    try {
+      await addIncomeFS(currentProfile.id, incomeToAdd);
+      await loadPageData(); // Re-fetch data after adding
+      toast({
+        title: "Income Added",
+        description: "Your new income has been successfully recorded.",
+        className: "bg-accent text-accent-foreground"
+      });
+    } catch (error) {
+      console.error("Error adding income:", error);
+      toast({
+        variant: "destructive",
+        title: "Error Adding Income",
+        description: "Could not record income. Please try again.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handlePreviousMonth = () => {
     setViewingDate(prev => subMonths(startOfMonth(prev), 1));
   };
@@ -221,6 +254,14 @@ function IncomesContent() {
                     {format(viewingDate, 'MMMM yyyy')} - View and manage your non-recurring incomes.
                   </CardDescription>
                 </div>
+                {!isReadOnlyMode && (
+                  <div className="w-full sm:w-auto">
+                    <AddIncomeDialog
+                      onIncomeAdded={handleAddIncome}
+                      currentViewingDateForAdd={viewingDate}
+                    />
+                  </div>
+                )}
               </div>
             </CardHeader>
             <CardContent>

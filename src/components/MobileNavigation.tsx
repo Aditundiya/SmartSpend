@@ -80,21 +80,21 @@ export default function MobileNavigation() {
     <>
       {/* Mobile Header */}
       <header className="lg:hidden bg-card border-b border-border sticky top-0 z-40">
-        <div className="flex items-center justify-between px-4 py-3">
+        <div className="flex items-center justify-between px-4 py-4">
           <Link href="/" className="flex items-center gap-2">
-            <div className="relative h-6 w-6">
+            <div className="relative h-7 w-7">
               <NextImage src="/logo.png" alt="Spentra Logo" fill className="object-contain" />
             </div>
-            <span className="font-bold text-lg">Spentra</span>
+            <span className="font-bold text-xl">Spentra</span>
           </Link>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             {/* Quick Add Button - REMOVED for cleanup */}
             {/* Menu Button */}
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="sm" aria-label="Open navigation menu">
-                  <Menu className="h-5 w-5" />
+                <Button variant="ghost" size="icon" className="h-10 w-10 mr-1" aria-label="Open navigation menu">
+                  <Menu className="h-6 w-6" />
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-80">
