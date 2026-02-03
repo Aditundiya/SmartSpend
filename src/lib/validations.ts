@@ -33,10 +33,7 @@ export const expenseFormSchema = z.object({
   date: z.date({
     required_error: 'Date is required',
     invalid_type_error: 'Please select a valid date'
-  })
-    .refine((date) => date <= new Date(), {
-      message: "Date cannot be in the future"
-    }),
+  }),
   profileId: nonEmptyString('Profile'),
   frequency: z.enum([...INCOME_FREQUENCY_IDS], {
     errorMap: () => ({ message: 'Please select a valid frequency' })
@@ -56,10 +53,7 @@ export const incomeFormSchema = z.object({
   date: z.date({
     required_error: 'Date is required',
     invalid_type_error: 'Please select a valid date'
-  })
-    .refine((date) => date <= new Date(), {
-      message: "Date cannot be in the future"
-    }),
+  }),
 });
 
 export type IncomeFormValues = z.infer<typeof incomeFormSchema>;
