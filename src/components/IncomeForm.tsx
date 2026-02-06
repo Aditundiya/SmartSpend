@@ -158,35 +158,30 @@ export default function IncomeForm({
             render={({ field }) => (
               <FormItem className="flex flex-col">
                 <FormLabel>Date Received</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        type="button"
-                        variant={'outline'}
-                        className={cn(
-                          'w-full pl-3 text-left font-normal',
-                          !field.value && 'text-muted-foreground'
-                        )}
-                      >
-                        {field.value instanceof Date && !isNaN(field.value.getTime()) ? format(field.value, 'PPP') : <span>Pick a date</span>}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <div onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
-                      <Calendar
-                        mode="single"
-                        selected={field.value instanceof Date && !isNaN(field.value.getTime()) ? field.value : undefined}
-                        onSelect={(selectedDate) => field.onChange(selectedDate || startOfMonth(currentViewingDateForAdd))}
-                        defaultMonth={calendarDefaultMonth}
-                        disabled={(date) => date < new Date('2000-01-01')}
-                        initialFocus
-                      />
-                    </div>
-                  </PopoverContent>
-                </Popover>
+                <FormControl>
+                  <div className="relative">
+                    <Input
+                      type="date"
+                      className="pl-10 block"
+                      value={field.value instanceof Date && !isNaN(field.value.getTime()) ? format(field.value, 'yyyy-MM-dd') : ''}
+                      onChange={(e) => {
+                        const date = e.target.valueAsDate;
+                        if (date) {
+                          // Adjust for potential timezone offset if needed, but valueAsDate usually returns UTC midnight
+                          // A safer bet for local dates is to just parse the string 'YYYY-MM-DD' manually or use new Date(string + 'T00:00:00')
+                          // Actually, standard new Date(e.target.value) works in most browsers as UTC, which might show previous day
+                          // date-fns parseISO is best, or just manual split
+                          const [year, month, day] = e.target.value.split('-').map(Number);
+                          const localDate = new Date(year, month - 1, day);
+                          field.onChange(localDate);
+                        } else {
+                          // handle clear if needed, or just ignore
+                        }
+                      }}
+                    />
+                    <CalendarIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 opacity-50 pointer-events-none" />
+                  </div>
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}

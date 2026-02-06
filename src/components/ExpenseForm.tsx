@@ -239,35 +239,24 @@ export default function ExpenseForm({
             render={({ field }) => (
               <FormItem className="flex flex-col">
                 <FormLabel>Date</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        type="button"
-                        variant={'outline'}
-                        className={cn(
-                          'w-full pl-3 text-left font-normal',
-                          !field.value && 'text-muted-foreground'
-                        )}
-                      >
-                        {field.value ? format(field.value, 'PPP') : <span>Pick a date</span>}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <div onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        defaultMonth={calendarDefaultMonth}
-                        disabled={(d) => d < new Date('2000-01-01')}
-                        initialFocus
-                      />
-                    </div>
-                  </PopoverContent>
-                </Popover>
+                <FormControl>
+                  <div className="relative">
+                    <Input
+                      type="date"
+                      className="pl-10 block"
+                      value={field.value instanceof Date && !isNaN(field.value.getTime()) ? format(field.value, 'yyyy-MM-dd') : ''}
+                      onChange={(e) => {
+                        const date = e.target.valueAsDate;
+                        if (date) {
+                          const [year, month, day] = e.target.value.split('-').map(Number);
+                          const localDate = new Date(year, month - 1, day);
+                          field.onChange(localDate);
+                        }
+                      }}
+                    />
+                    <CalendarIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 opacity-50 pointer-events-none" />
+                  </div>
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}

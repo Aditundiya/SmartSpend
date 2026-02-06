@@ -101,7 +101,7 @@ export default function MobileNavigation() {
                 <SheetHeader className="sr-only">
                   <SheetTitle>Navigation Menu</SheetTitle>
                 </SheetHeader>
-                <div className="flex flex-col h-full">
+                <div className="flex flex-col h-full pt-[env(safe-area-inset-top)]">
                   {/* Header */}
                   <div className="flex items-center gap-2 pb-4 border-b">
                     <div className="relative h-6 w-6">
