@@ -175,14 +175,16 @@ export default function IncomeForm({
                     </FormControl>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={field.value instanceof Date && !isNaN(field.value.getTime()) ? field.value : undefined}
-                      onSelect={(selectedDate) => field.onChange(selectedDate || startOfMonth(currentViewingDateForAdd))}
-                      defaultMonth={calendarDefaultMonth}
-                      disabled={(date) => date < new Date('2000-01-01')}
-                      initialFocus
-                    />
+                    <div onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
+                      <Calendar
+                        mode="single"
+                        selected={field.value instanceof Date && !isNaN(field.value.getTime()) ? field.value : undefined}
+                        onSelect={(selectedDate) => field.onChange(selectedDate || startOfMonth(currentViewingDateForAdd))}
+                        defaultMonth={calendarDefaultMonth}
+                        disabled={(date) => date < new Date('2000-01-01')}
+                        initialFocus
+                      />
+                    </div>
                   </PopoverContent>
                 </Popover>
                 <FormMessage />

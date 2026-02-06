@@ -58,7 +58,11 @@ function Calendar({
           <div className={cn("space-x-1 flex items-center", className)} {...props}>
             <button
               type="button"
-              onClick={onPreviousClick}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onPreviousClick?.(e);
+              }}
               className={cn(
                 buttonVariants({ variant: "outline" }),
                 "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 absolute left-1"
@@ -68,7 +72,11 @@ function Calendar({
             </button>
             <button
               type="button"
-              onClick={onNextClick}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onNextClick?.(e);
+              }}
               className={cn(
                 buttonVariants({ variant: "outline" }),
                 "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 absolute right-1"

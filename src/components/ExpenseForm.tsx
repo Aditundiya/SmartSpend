@@ -256,14 +256,16 @@ export default function ExpenseForm({
                     </FormControl>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      defaultMonth={calendarDefaultMonth}
-                      disabled={(d) => d < new Date('2000-01-01')}
-                      initialFocus
-                    />
+                    <div onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        defaultMonth={calendarDefaultMonth}
+                        disabled={(d) => d < new Date('2000-01-01')}
+                        initialFocus
+                      />
+                    </div>
                   </PopoverContent>
                 </Popover>
                 <FormMessage />
