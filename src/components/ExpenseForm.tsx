@@ -106,7 +106,18 @@ export default function ExpenseForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form
+        onSubmit={(e) => {
+          // Prevent accidental submission if the user clicked something that didn't have type="submit"
+          const submitter = (e.nativeEvent as any).submitter;
+          if (submitter && submitter.getAttribute('type') !== 'submit') {
+            e.preventDefault();
+            return;
+          }
+          form.handleSubmit(onSubmit)(e);
+        }}
+        className="space-y-6"
+      >
         <fieldset disabled={disabled} className="space-y-6">
           {mode === 'edit' && (
             <FormField
@@ -232,6 +243,7 @@ export default function ExpenseForm({
                   <PopoverTrigger asChild>
                     <FormControl>
                       <Button
+                        type="button"
                         variant={'outline'}
                         className={cn(
                           'w-full pl-3 text-left font-normal',
@@ -249,7 +261,7 @@ export default function ExpenseForm({
                       selected={field.value}
                       onSelect={field.onChange}
                       defaultMonth={calendarDefaultMonth}
-                      disabled={(d) => d > new Date() || d < new Date('2000-01-01')}
+                      disabled={(d) => d < new Date('2000-01-01')}
                       initialFocus
                     />
                   </PopoverContent>
